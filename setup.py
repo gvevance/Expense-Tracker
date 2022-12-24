@@ -1,5 +1,8 @@
-import imaplib
+import imaplib, pickle
+from os.path import exists
+
 LOGIN_FILE = "login.txt"
+PICKLE_OBJ_FILE = "message_id_dict.pkl"
 
 def connect_to_server():
 
@@ -19,3 +22,16 @@ def connect_to_server():
         exit()
     
     return connection
+
+
+def return_message_id_dict ():
+    
+    if not exists(PICKLE_OBJ_FILE) :
+        empty_dic ={}
+        with open(PICKLE_OBJ_FILE,'wb') as file :
+            pickle.dump(empty_dic,file)
+                        
+    with open(PICKLE_OBJ_FILE,'rb') as file :
+        data = pickle.load(file)
+    
+    return data

@@ -2,55 +2,23 @@
 # todo deadline - skeleton of the project by 25th Dec
 
 from setup import connect_to_server
-import email
+from emails import parse_emails
+from setup import return_message_id_dict
 
 # return an imap connection object
 connection = connect_to_server()
+seen_messages_dict = return_message_id_dict()
 
 #select INBOX
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
+parse_emails(connection,"\"PhonePe sent or paid\"",num_of_messages)
 
-for i in range(num_of_messages,0,-1):
-    res, msg = connection.fetch(str(i), '(RFC822)')
-    for response in msg :
-        if isinstance(response, tuple):
-            msg = email.message_from_bytes(response[1])
-            subject, encoding = email.header.decode_header(msg["Subject"])[0]
-            if isinstance(subject,bytes):
-                subject = subject.decode(encoding)
-                
-            From, encoding = email.header.decode_header(msg.get("From"))[0]
-            if isinstance(From, bytes):
-                From = From.decode(encoding)
-            
-            print("ID:",str(i))
-            print("Subject:", subject)
-            print("From:", From)
-            print()
-
+#select INBOX
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
-
-for i in range(num_of_messages,0,-1):
-    res, msg = connection.fetch(str(i), '(RFC822)')
-    for response in msg :
-        if isinstance(response, tuple):
-            msg = email.message_from_bytes(response[1])
-            subject, encoding = email.header.decode_header(msg["Subject"])[0]
-            if isinstance(subject,bytes):
-                subject = subject.decode(encoding)
-                
-            From, encoding = email.header.decode_header(msg.get("From"))[0]
-            if isinstance(From, bytes):
-                From = From.decode(encoding)
-             
-            print("ID:",str(i))
-            print("Subject:", subject)
-            print("From:", From)
-            print()
-
+parse_emails(connection,"\"Sodexo payments\"",num_of_messages)
             
-# todo figure out preventing duplicate entries
-# todo Idea 1 : each email has an ID - store it locally in a pickle format
-# 
+''' read the latest k emails until you reach an email we've looked at before.
+    store message-id or some value unique to an email in a dictionary.
+    store this dictionary in a pickle object '''
