@@ -1,24 +1,54 @@
-# https://coderslegacy.com/python/imap-read-emails-with-imaplib/
-# todo deadline - skeleton of the project by 25th Dec
+# https://coderslegacy.com/python/imap-read-emails-with-imaplib/ => old python version
+#! deadline - skeleton of the project by 29th Dec
 
 from setup import connect_to_server
-from emails import parse_emails
-from setup import return_message_id_dict
+from setup import get_seen_message_ids
+from emails import get_message_ID
+from emails import parse_PhonePe_email
+from emails import parse_Sodexo_email
+from setup import update_seen_message_ids
+
+
+TESTING = True
 
 # return an imap connection object
 connection = connect_to_server()
-seen_messages_dict = return_message_id_dict()
+seen_messages_dict = get_seen_message_ids()
 
-#select INBOX
+if TESTING :
+    seen_messages_dict = {}
+
+# print("\nDisplay dict before main logic run\n")
+# for x in seen_messages_dict :
+#      print(x)
+# print("\n")
+
+#select INBOX for PhonePe
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
-parse_emails(connection,"\"PhonePe sent or paid\"",num_of_messages)
 
-#select INBOX
+for i in range(num_of_messages,0,-1):
+    res, msg, msg_ID = get_message_ID(connection,i)
+    if msg_ID not in seen_messages_dict :
+        seen_messages_dict[msg_ID] = True
+        parse_PhonePe_email(msg)
+    else :
+        break
+
+#select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
-parse_emails(connection,"\"Sodexo payments\"",num_of_messages)
-            
-''' read the latest k emails until you reach an email we've looked at before.
-    store message-id or some value unique to an email in a dictionary.
-    store this dictionary in a pickle object '''
+
+for i in range(num_of_messages,0,-1):
+    res, msg, msg_ID = get_message_ID(connection,i)
+    if msg_ID not in seen_messages_dict :
+        seen_messages_dict[msg_ID] = True
+        parse_Sodexo_email(msg)
+    else :
+        break
+
+# print("\nDisplay dict after logic run\n")
+# for x in seen_messages_dict :
+#      print(x)
+
+update_seen_message_ids(seen_messages_dict )

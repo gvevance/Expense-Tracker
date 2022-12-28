@@ -2,7 +2,7 @@ import imaplib, pickle
 from os.path import exists
 
 LOGIN_FILE = "login.txt"
-PICKLE_OBJ_FILE = "message_id_dict.pkl"
+PICKLE_OBJ_FILE = "seen_message_IDs.pkl"
 
 def connect_to_server():
 
@@ -24,7 +24,7 @@ def connect_to_server():
     return connection
 
 
-def return_message_id_dict ():
+def get_seen_message_ids ():
     
     if not exists(PICKLE_OBJ_FILE) :
         empty_dic ={}
@@ -35,3 +35,8 @@ def return_message_id_dict ():
         data = pickle.load(file)
     
     return data
+
+
+def update_seen_message_ids (updated_dict):
+    with open(PICKLE_OBJ_FILE,'wb') as file :
+        pickle.dump(updated_dict,file)
