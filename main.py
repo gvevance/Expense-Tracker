@@ -1,12 +1,13 @@
 # https://github.com/gvevance/Expense-Tracker
 # https://coderslegacy.com/python/imap-read-emails-with-imaplib/ => old python version
 #! deadline - skeleton of the project by 29th Dec
+#! Learn and set up logger for commandline logging
 
 from setup import connect_to_server
 from setup import get_seen_message_ids
-from emails import get_message_ID
-from emails import parse_PhonePe_email
-from emails import parse_Sodexo_email
+from email_parse import get_message_ID
+from email_parse import parse_PhonePe_email
+from email_parse import parse_Sodexo_email
 from setup import update_seen_message_ids
 
 TESTING = False
@@ -37,6 +38,7 @@ for i in range(num_of_messages,0,-1):
         seen_messages_dict[msg_ID] = True
         parse_PhonePe_email(msg)
     else :
+        print("PhonePe payments processed.")
         break
 
 #select INBOX for Sodexo
@@ -52,6 +54,7 @@ for i in range(num_of_messages,0,-1):
         seen_messages_dict[msg_ID] = True
         parse_Sodexo_email(msg)
     else :
+        print("Sodexo payments processed.")
         break
 
 if TESTING :
