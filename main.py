@@ -1,3 +1,4 @@
+# https://github.com/gvevance/Expense-Tracker
 # https://coderslegacy.com/python/imap-read-emails-with-imaplib/ => old python version
 #! deadline - skeleton of the project by 29th Dec
 
@@ -8,8 +9,7 @@ from emails import parse_PhonePe_email
 from emails import parse_Sodexo_email
 from setup import update_seen_message_ids
 
-
-TESTING = True
+TESTING = False
 
 # return an imap connection object
 connection = connect_to_server()
@@ -27,6 +27,9 @@ if TESTING :
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
 
+if TESTING :
+    num_of_messages = 1
+
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
@@ -38,6 +41,9 @@ for i in range(num_of_messages,0,-1):
 #select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
+
+if TESTING :
+    num_of_messages = 1
 
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
