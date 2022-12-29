@@ -18,10 +18,11 @@ seen_messages_dict = get_seen_message_ids()
 if TESTING :
     seen_messages_dict = {}
 
-# print("\nDisplay dict before main logic run\n")
-# for x in seen_messages_dict :
-#      print(x)
-# print("\n")
+if TESTING :
+    print("\nDisplay dict before main logic run\n")
+    for x in seen_messages_dict :
+        print(x)
+    print("\n")
 
 #select INBOX for PhonePe
 status,messages = connection.select("\"PhonePe sent or paid\"")
@@ -53,8 +54,9 @@ for i in range(num_of_messages,0,-1):
     else :
         break
 
-# print("\nDisplay dict after logic run\n")
-# for x in seen_messages_dict :
-#      print(x)
+if TESTING :
+    print("\nDisplay dict after logic run\n")
+    for x in seen_messages_dict :
+         print(x)
 
 update_seen_message_ids(seen_messages_dict )
