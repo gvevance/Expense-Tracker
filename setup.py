@@ -4,6 +4,7 @@ from os.path import exists
 LOGIN_FILE = "login.txt"
 PICKLE_OBJ_FILE = "seen_message_IDs.pkl"
 
+
 def connect_to_server():
 
     with open(LOGIN_FILE,"r") as loginfile :
@@ -21,6 +22,7 @@ def connect_to_server():
         print(e)
         exit()
     
+    print("Connection established.")
     return connection
 
 
