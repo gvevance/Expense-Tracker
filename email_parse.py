@@ -3,6 +3,7 @@
 from email.parser import BytesParser
 from email.policy import default
 import re
+from datetime import datetime
 
 parser = BytesParser(policy=default)
 
@@ -21,18 +22,38 @@ def get_message_ID(connection,i) :
 
 def process_PhonePe_email_body_1(text) :
     
-    # raw_string = unicodedata.normalize('NFC',text)
-    # a = []
-    # for x in raw_string :
-    #     a.append(x)
-    # print(a)
-
-    # raw_string = raw_string.replace("  ","")
-    # raw_string = raw_string.replace("\t\t","")
-    # raw_string = raw_string.replace("\t","")
-    
     text_no_space = re.sub(' [ \t]+','\n',text)
-    print(text_no_space.splitlines())
+    #* logic = if two or more spaces come together, it is a long space and is replaced with a newline to split at in the next step 
+    
+    lines = text_no_space.splitlines()
+    # print(lines)
+
+    Date_txt = lines[2]
+    
+    txn_id_index = lines.index('Txn. ID')       # some names come in multiple lines
+    Amount_txt = lines[txn_id_index-1]
+    
+    Paid_to_txt = " ".join(lines[4:txn_id_index-1])
+
+    hi_message_index = lines.index('Hi Gabriel Ve Vance')
+    if lines[hi_message_index-1] != ':' :
+        Transaction_msg_txt = lines[hi_message_index-1]
+    else :
+        Transaction_msg_txt = ''
+    
+    try :
+        currency_char = Amount_txt[0]
+        amount_float = float(Amount_txt[2:])
+        datetime_object = datetime.strptime(Date_txt, '%b %d, %Y')
+    except :
+        currency_char = '$'
+        amount_float = 0.0
+        datetime_object = datetime.strptime('Jan 1, 2023', '%b %d, %Y')
+
+    print("\nDate : ",datetime_object)
+    print("Paid to : ",Paid_to_txt)
+    print("Amount : ",currency_char,amount_float)
+    print("Transaction message : ",Transaction_msg_txt)
 
 
 def process_PhonePe_email_body_2(text) :

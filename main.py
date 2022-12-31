@@ -25,7 +25,7 @@ status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
 
 if TESTING :
-    num_of_messages = 1     #todo remove after testing
+    num_of_messages = 5     #todo remove after testing
 
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
@@ -33,7 +33,7 @@ for i in range(num_of_messages,0,-1):
         seen_messages_dict[msg_ID] = True
         parse_PhonePe_email_1(msg)
     else :
-        print("PhonePe payments processed.")
+        # print("PhonePe payments processed.")
         break
 
 # #select INBOX for PhonePe Payment for
