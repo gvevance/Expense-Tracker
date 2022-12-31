@@ -24,8 +24,8 @@ if TESTING :
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
 
-if TESTING :
-    num_of_messages = 5     #todo remove after testing
+# if TESTING :
+#     num_of_messages = 2     #todo remove after testing
 
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
