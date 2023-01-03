@@ -26,12 +26,12 @@ seen_messages_dict = get_seen_message_ids()
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
 
-num_of_messages = 0     #todo comment
+# num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        # parse_PhonePe_email_1(msg)
+        parse_PhonePe_email_1(msg)
     else :
         # print("PhonePe payments processed.")
         break
@@ -40,7 +40,7 @@ for i in range(num_of_messages,0,-1):
 status,messages = connection.select("\"PhonePe Payment for\"")
 num_of_messages = int(messages[0])
 
-num_of_messages = 0     #todo comment
+# num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
@@ -50,8 +50,12 @@ for i in range(num_of_messages,0,-1):
         print("PhonePe payments processed.")
         break
 
+# bug fix - can be removed later when at least one message of this type has been received
+if num_of_messages == 0 :
+    print("PhonePe payments processed.")
 
-seen_messages_dict = {}     #todo comment
+
+# seen_messages_dict = {}     #todo comment
 #select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
@@ -68,4 +72,4 @@ for i in range(num_of_messages,0,-1):
         break
 
 #todo uncomment
-# update_seen_message_ids(seen_messages_dict)
+update_seen_message_ids(seen_messages_dict)
