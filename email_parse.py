@@ -2,7 +2,7 @@
 
 from email.parser import BytesParser
 from email.policy import default
-import re
+from re import sub
 from datetime import datetime
 from datetime import timedelta
 from bs4 import BeautifulSoup
@@ -26,7 +26,7 @@ def process_PhonePe_email_body_1(text,type) :
     
     if type == "text/plain" :
 
-        text_no_space = re.sub(' [ \t]+','\n',text)
+        text_no_space = sub(' [ \t]+','\n',text)
         #* logic = if two or more spaces come together, it is a long space and is replaced with a newline to split at in the next step 
         
         lines = text_no_space.splitlines()
@@ -64,8 +64,8 @@ def process_PhonePe_email_body_1(text,type) :
         soup = BeautifulSoup(text,'html.parser')
         text_str = soup.text
 
-        text_no_space = re.sub('[\n]+','\n',text_str)
-        text_no_space = re.sub(' [ ]+','\n',text_no_space)
+        text_no_space = sub('[\n]+','\n',text_str)
+        text_no_space = sub(' [ ]+','\n',text_no_space)
         lines = text_no_space.splitlines()
 
         lines_2 = []
@@ -105,7 +105,7 @@ def process_PhonePe_email_body_1(text,type) :
 
 def process_PhonePe_email_body_2(text) :
         
-    text_no_space = re.sub(' [ \t]+','\n',text)
+    text_no_space = sub(' [ \t]+','\n',text)
     print(text_no_space.splitlines())
 
 
@@ -132,7 +132,7 @@ def process_Sodexo_email_body(text,email_date,type) :
     
     if type == "text/plain" :
 
-        text_no_space = re.sub(' [ \t]+','\n',text)
+        text_no_space = sub(' [ \t]+','\n',text)
         #* logic = if two or more spaces come together, it is a long space and is replaced with a newline to split at in the next step 
         
         lines = text_no_space.splitlines()
@@ -171,8 +171,8 @@ def process_Sodexo_email_body(text,email_date,type) :
         text_str = soup.text
         # print(text_str)
 
-        text_no_space = re.sub('[\n]+','\n',text_str)
-        text_no_space = re.sub(' [ ]+','\n',text_no_space)
+        text_no_space = sub('[\n]+','\n',text_str)
+        text_no_space = sub(' [ ]+','\n',text_no_space)
         lines = text_no_space.splitlines()
         # print(lines)
 
@@ -210,7 +210,10 @@ def process_Sodexo_email_body(text,email_date,type) :
 
 
 def parse_Sodexo_email(msg) :
+    
+    # Get email date because email body does not have year information 
     email_date = datetime.strptime(msg['date'].split(' +')[0],'%a, %d %b %Y %H:%M:%S') + timedelta(minutes=30, hours=5)
+    
     for part in msg.walk():       
         if part.get_content_type() == "text/plain":
             body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
