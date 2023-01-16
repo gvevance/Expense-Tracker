@@ -1,6 +1,5 @@
 # https://github.com/gvevance/Expense-Tracker
 # https://coderslegacy.com/python/imap-read-emails-with-imaplib/ => old python version
-#! deadline - skeleton of the project by 29th Dec
 #! Learn and set up logger for commandline logging
 
 from setup import connect_to_server
@@ -25,6 +24,7 @@ seen_messages_dict = get_seen_message_ids()
 #select INBOX for PhonePe sent or paid
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
+print("# of PhonePe type 1 emails :",num_of_messages)
 
 # num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
@@ -39,6 +39,7 @@ for i in range(num_of_messages,0,-1):
 # #select INBOX for PhonePe Payment for
 status,messages = connection.select("\"PhonePe Payment for\"")
 num_of_messages = int(messages[0])
+print("# of PhonePe type 2 emails :",num_of_messages)
 
 # num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
@@ -50,7 +51,7 @@ for i in range(num_of_messages,0,-1):
         print("PhonePe payments processed.")
         break
 
-# bug fix - can be removed later when at least one message of this type has been received
+#* bug fix - can be removed later when at least one message of this type has been received
 if num_of_messages == 0 :
     print("PhonePe payments processed.")
 
@@ -59,7 +60,7 @@ if num_of_messages == 0 :
 #select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
-
+print("# of Sodexo emails :",num_of_messages)
 
 # num_of_messages = 1     #todo comment
 for i in range(num_of_messages,0,-1):

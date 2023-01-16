@@ -117,11 +117,13 @@ def parse_PhonePe_email_1(msg) :
                 body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
                 body = str(body.decode())
                 process_PhonePe_email_body_1(body,"text/plain")
+                break
 
             elif part.get_content_type() == "text/html":
                 body = part.get_payload(decode=True)
                 body = str(body.decode())
                 process_PhonePe_email_body_1(body,"text/html")
+                break
     
 
 def parse_PhonePe_email_2(msg) :
