@@ -59,7 +59,7 @@ def process_PhonePe_email_body_1(text,type) :
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
 
-        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+        return dict(type="PhonePe_1", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
     elif type == "text/html" :
         
@@ -103,7 +103,7 @@ def process_PhonePe_email_body_1(text,type) :
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
 
-        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+        return dict(type="PhonePe_1", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
 
 
@@ -174,7 +174,7 @@ def process_Sodexo_email_body(text,email_date,type) :
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
 
-        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+        return dict(type="Sodexo", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
     elif type == "text/html" :
         
@@ -219,8 +219,8 @@ def process_Sodexo_email_body(text,email_date,type) :
         print("Paid to : ",Paid_to_txt)
         print("Amount : ",currency_char,amount_float)
         Transaction_msg_txt = ''
-        
-        return dict(date=email_date, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+
+        return dict(type="Sodexo", date=email_date, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
 
 def parse_Sodexo_email(msg) :

@@ -1,5 +1,6 @@
 # https://github.com/gvevance/Expense-Tracker
 # https://coderslegacy.com/python/imap-read-emails-with-imaplib/ => old python version
+#todo define rules to categories transactions
 #! Learn and set up logger for commandline logging
 
 from setup import connect_to_server
@@ -19,6 +20,7 @@ try :
     # print("[Errno -3] Temporary failure in name resolution.")
 except :    
     print("Some other error.")
+    exit()
 
 seen_messages_dict = get_seen_message_ids()
 
@@ -30,7 +32,7 @@ status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
 print("\n# of PhonePe type 1 emails :",num_of_messages)
 
-num_of_messages = 0     #todo comment
+# num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
@@ -46,7 +48,7 @@ status,messages = connection.select("\"PhonePe Payment for\"")
 num_of_messages = int(messages[0])
 print("\n# of PhonePe type 2 emails :",num_of_messages)
 
-num_of_messages = 0     #todo comment
+# num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
