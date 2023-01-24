@@ -9,6 +9,7 @@ from email_parse import parse_PhonePe_email_1
 from email_parse import parse_PhonePe_email_2
 from email_parse import parse_Sodexo_email
 from setup import update_seen_message_ids
+from tabulate import process_transaction
 
 
 # return an imap connection object
@@ -21,17 +22,21 @@ except :
 
 seen_messages_dict = get_seen_message_ids()
 
+# todo comment
+seen_messages_dict = {}
+
 #select INBOX for PhonePe sent or paid
 status,messages = connection.select("\"PhonePe sent or paid\"")
 num_of_messages = int(messages[0])
-print("# of PhonePe type 1 emails :",num_of_messages)
+print("\n# of PhonePe type 1 emails :",num_of_messages)
 
-# num_of_messages = 0     #todo comment
+num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        parse_PhonePe_email_1(msg)
+        details_dict = parse_PhonePe_email_1(msg)
+        process_transaction(details_dict)
     else :
         # print("PhonePe payments processed.")
         break
@@ -39,14 +44,15 @@ for i in range(num_of_messages,0,-1):
 # #select INBOX for PhonePe Payment for
 status,messages = connection.select("\"PhonePe Payment for\"")
 num_of_messages = int(messages[0])
-print("# of PhonePe type 2 emails :",num_of_messages)
+print("\n# of PhonePe type 2 emails :",num_of_messages)
 
-# num_of_messages = 0     #todo comment
+num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        parse_PhonePe_email_2(msg)
+        details_dict = parse_PhonePe_email_2(msg)
+        # process_transaction(details_dict)
     else :
         print("PhonePe payments processed.")
         break
@@ -60,14 +66,15 @@ if num_of_messages == 0 :
 #select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
-print("# of Sodexo emails :",num_of_messages)
+print("\n# of Sodexo emails :",num_of_messages)
 
 # num_of_messages = 1     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        parse_Sodexo_email(msg)
+        details_dict = parse_Sodexo_email(msg)
+        process_transaction(details_dict)
     else :
         print("Sodexo payments processed.")
         break

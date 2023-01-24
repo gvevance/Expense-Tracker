@@ -59,6 +59,8 @@ def process_PhonePe_email_body_1(text,type) :
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
 
+        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+
     elif type == "text/html" :
         
         soup = BeautifulSoup(text,'html.parser')
@@ -101,6 +103,8 @@ def process_PhonePe_email_body_1(text,type) :
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
 
+        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
+
 
 
 def process_PhonePe_email_body_2(text) :
@@ -111,23 +115,26 @@ def process_PhonePe_email_body_2(text) :
 
 def parse_PhonePe_email_1(msg) :
 
+    details_dict = {}
     if msg.is_multipart():
         for part in msg.walk():       
             if part.get_content_type() == "text/plain":
                 body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
                 body = str(body.decode())
-                process_PhonePe_email_body_1(body,"text/plain")
+                details_dict = process_PhonePe_email_body_1(body,"text/plain")
                 break
 
             elif part.get_content_type() == "text/html":
                 body = part.get_payload(decode=True)
                 body = str(body.decode())
-                process_PhonePe_email_body_1(body,"text/html")
+                details_dict = process_PhonePe_email_body_1(body,"text/html")
                 break
+    
+    return details_dict
     
 
 def parse_PhonePe_email_2(msg) :
-    return
+    return {}
 
 
 def process_Sodexo_email_body(text,email_date,type) :
@@ -166,6 +173,8 @@ def process_Sodexo_email_body(text,email_date,type) :
         print("Paid to : ",Paid_to_txt)
         print("Amount : ",currency_char,amount_float)
         print("Transaction message : ",Transaction_msg_txt)
+
+        return dict(date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
     elif type == "text/html" :
         
@@ -209,6 +218,9 @@ def process_Sodexo_email_body(text,email_date,type) :
         print("\nDate : ",email_date)
         print("Paid to : ",Paid_to_txt)
         print("Amount : ",currency_char,amount_float)
+        Transaction_msg_txt = ''
+        
+        return dict(date=email_date, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
 
 def parse_Sodexo_email(msg) :
@@ -220,10 +232,13 @@ def parse_Sodexo_email(msg) :
         if part.get_content_type() == "text/plain":
             body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
             body = str(body.decode())
-            process_Sodexo_email_body(body,email_date,"text/plain")
+            details_dict = process_Sodexo_email_body(body,email_date,"text/plain")
+            break
 
         elif part.get_content_type() == "text/html":
             body = part.get_payload(decode=True)
             body = str(body.decode())
-            process_Sodexo_email_body(body,email_date,"text/html")
-                
+            details_dict = process_Sodexo_email_body(body,email_date,"text/html")
+            break
+
+    return details_dict    
