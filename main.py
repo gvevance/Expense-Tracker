@@ -24,8 +24,7 @@ except :
 
 seen_messages_dict = get_seen_message_ids()
 
-# todo comment
-seen_messages_dict = {}
+seen_messages_dict = {}     # todo comment
 
 #select INBOX for PhonePe sent or paid
 status,messages = connection.select("\"PhonePe sent or paid\"")
@@ -54,7 +53,7 @@ for i in range(num_of_messages,0,-1):
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
         details_dict = parse_PhonePe_email_2(msg)
-        # process_transaction(details_dict)
+        process_transaction(details_dict)
     else :
         print("PhonePe payments processed.")
         break
@@ -70,7 +69,7 @@ status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
 print("\n# of Sodexo emails :",num_of_messages)
 
-# num_of_messages = 1     #todo comment
+# num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
