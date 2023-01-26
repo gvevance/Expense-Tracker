@@ -11,7 +11,10 @@ from email_parse import parse_PhonePe_email_2
 from email_parse import parse_Sodexo_email
 from setup import update_seen_message_ids
 from tabulate import process_transaction
+from setup import setup_csv
+from tabulate import dump_from_csv_file
 
+verbose = False
 
 # return an imap connection object
 try :
@@ -23,6 +26,8 @@ except :
     exit()
 
 seen_messages_dict = get_seen_message_ids()
+CSV_FILE = setup_csv()
+BUFFER = []
 
 seen_messages_dict = {}     # todo comment
 
@@ -36,8 +41,8 @@ for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        details_dict = parse_PhonePe_email_1(msg)
-        process_transaction(details_dict)
+        details_dict = parse_PhonePe_email_1(msg,verbose)
+        BUFFER = process_transaction(details_dict,BUFFER,verbose)
     else :
         # print("PhonePe payments processed.")
         break
@@ -52,8 +57,8 @@ for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        details_dict = parse_PhonePe_email_2(msg)
-        process_transaction(details_dict)
+        details_dict = parse_PhonePe_email_2(msg,verbose)
+        BUFFER = process_transaction(details_dict,BUFFER,verbose)
     else :
         print("PhonePe payments processed.")
         break
@@ -74,11 +79,16 @@ for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :
         seen_messages_dict[msg_ID] = True
-        details_dict = parse_Sodexo_email(msg)
-        process_transaction(details_dict)
+        details_dict = parse_Sodexo_email(msg,verbose)
+        BUFFER = process_transaction(details_dict,BUFFER,verbose)
     else :
         print("Sodexo payments processed.")
         break
 
 #todo uncomment
 update_seen_message_ids(seen_messages_dict)
+
+for item in BUFFER :
+    print(item)
+
+dump_from_csv_file(CSV_FILE)

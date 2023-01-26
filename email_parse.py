@@ -22,7 +22,7 @@ def get_message_ID(connection,i) :
     return res, msg, msg_ID
 
 
-def process_PhonePe_email_body_1(text,type) :
+def process_PhonePe_email_body_1(text,type,verbose) :
     
     if type == "text/plain" :
 
@@ -53,11 +53,12 @@ def process_PhonePe_email_body_1(text,type) :
             currency_char = '$'
             amount_float = 0.0
             datetime_object = datetime.strptime('Jan 1, 2023', '%b %d, %Y')
-
-        print("\nDate : ",datetime_object)
-        print("Paid to : ",Paid_to_txt)
-        print("Amount : ",currency_char,amount_float)
-        print("Transaction message : ",Transaction_msg_txt)
+        
+        if verbose :
+            print("\nDate : ",datetime_object)
+            print("Paid to : ",Paid_to_txt)
+            print("Amount : ",currency_char,amount_float)
+            print("Transaction message : ",Transaction_msg_txt)
 
         return dict(type="PhonePe_1", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
@@ -98,10 +99,11 @@ def process_PhonePe_email_body_1(text,type) :
             amount_float = 0.0
             datetime_object = datetime.strptime('Jan 1, 2023', '%b %d, %Y')
 
-        print("\nDate : ",datetime_object)
-        print("Paid to : ",Paid_to_txt)
-        print("Amount : ",currency_char,amount_float)
-        print("Transaction message : ",Transaction_msg_txt)
+        if verbose :
+            print("\nDate : ",datetime_object)
+            print("Paid to : ",Paid_to_txt)
+            print("Amount : ",currency_char,amount_float)
+            print("Transaction message : ",Transaction_msg_txt)
 
         return dict(type="PhonePe_1", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
@@ -197,7 +199,7 @@ def process_PhonePe_email_body_1(text,type) :
 #         # return dict(type="PhonePe_1", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 #         return {}
 
-def parse_PhonePe_email_1(msg) :
+def parse_PhonePe_email_1(msg,verbose=False) :
 
     details_dict = {}
     if msg.is_multipart():
@@ -205,32 +207,36 @@ def parse_PhonePe_email_1(msg) :
             if part.get_content_type() == "text/plain":
                 body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
                 body = str(body.decode())
-                details_dict = process_PhonePe_email_body_1(body,"text/plain")
+                details_dict = process_PhonePe_email_body_1(body,"text/plain",verbose)
                 break
 
             elif part.get_content_type() == "text/html":
                 body = part.get_payload(decode=True)
                 body = str(body.decode())
-                details_dict = process_PhonePe_email_body_1(body,"text/html")
+                details_dict = process_PhonePe_email_body_1(body,"text/html",verbose)
                 break
     
     return details_dict
     
 
-def parse_PhonePe_email_2(msg) :
+def parse_PhonePe_email_2(msg,verbose=False) :
     '''  for this type of PhonePe email, the subject line is what we can use to parse since the body of every type of payment is different. '''
 
     details_dict = {}
+
+    # amount and paid-to extracted from subject
     subject = msg['Subject']
     part = subject.split('Payment for ')[1]
     part = part.split(' is successful')[0]
     part = (part.split(' of ')[0],part.split(' of ')[1])
     amount_float = float(part[1].split('₹ ')[1])
     
+    # date
     date = msg['Date']
     part2 = date.split(' +')[0]
     datetime_object = datetime.strptime(part2, '%a, %d %b %Y %H:%M:%S')
     
+    # transaction message is blank
     Transaction_msg_txt = ''
 
     # print(part)
@@ -249,17 +255,18 @@ def parse_PhonePe_email_2(msg) :
     #             details_dict = process_PhonePe_email_body_2(body,"text/html")
     #             break
 
-    print("\nDate : ",datetime_object)
-    print("Paid to : ",part[0])
-    print("Amount : ",'₹',amount_float)
-    print("Transaction message : ",Transaction_msg_txt)
+    if verbose :
+        print("\nDate : ",datetime_object)
+        print("Paid to : ",part[0])
+        print("Amount : ",'₹',amount_float)
+        print("Transaction message : ",Transaction_msg_txt)
 
     details_dict = dict(type="PhonePe_2", date=datetime_object, paid_to=part[0], amount=amount_float, message=Transaction_msg_txt)
 
     return details_dict
 
 
-def process_Sodexo_email_body(text,email_date,type) :
+def process_Sodexo_email_body(text,email_date,type,verbose) :
     
     if type == "text/plain" :
 
@@ -291,10 +298,11 @@ def process_Sodexo_email_body(text,email_date,type) :
             amount_float = 0.0
             datetime_object = datetime.strptime('Jan 1, 2023', '%b %d, %Y')
 
-        print("\nDate : ",datetime_object)
-        print("Paid to : ",Paid_to_txt)
-        print("Amount : ",currency_char,amount_float)
-        print("Transaction message : ",Transaction_msg_txt)
+        if verbose :
+            print("\nDate : ",datetime_object)
+            print("Paid to : ",Paid_to_txt)
+            print("Amount : ",currency_char,amount_float)
+            print("Transaction message : ",Transaction_msg_txt)
 
         return dict(type="Sodexo", date=datetime_object, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
@@ -336,16 +344,18 @@ def process_Sodexo_email_body(text,email_date,type) :
             amount_float = 0.0
             # datetime_object = datetime.strptime('Jan 1, 2023', '%b %d, %Y')
 
-        # print("\nDate1 : ",datetime_object)
-        print("\nDate : ",email_date)
-        print("Paid to : ",Paid_to_txt)
-        print("Amount : ",currency_char,amount_float)
+        if verbose :
+            # print("\nDate1 : ",datetime_object)
+            print("\nDate : ",email_date)
+            print("Paid to : ",Paid_to_txt)
+            print("Amount : ",currency_char,amount_float)
+        
         Transaction_msg_txt = ''
 
         return dict(type="Sodexo", date=email_date, paid_to=Paid_to_txt, amount=amount_float, message=Transaction_msg_txt)
 
 
-def parse_Sodexo_email(msg) :
+def parse_Sodexo_email(msg,verbose=False) :
     
     # Get email date because email body does not have year information 
     email_date = datetime.strptime(msg['date'].split(' +')[0],'%a, %d %b %Y %H:%M:%S') + timedelta(minutes=30, hours=5)
@@ -354,13 +364,13 @@ def parse_Sodexo_email(msg) :
         if part.get_content_type() == "text/plain":
             body = part.get_payload(decode=True) #to control automatic email-style MIME decoding (e.g., Base64, uuencode, quoted-printable)
             body = str(body.decode())
-            details_dict = process_Sodexo_email_body(body,email_date,"text/plain")
+            details_dict = process_Sodexo_email_body(body,email_date,"text/plain",verbose)
             break
 
         elif part.get_content_type() == "text/html":
             body = part.get_payload(decode=True)
             body = str(body.decode())
-            details_dict = process_Sodexo_email_body(body,email_date,"text/html")
+            details_dict = process_Sodexo_email_body(body,email_date,"text/html",verbose)
             break
 
     return details_dict    

@@ -3,7 +3,7 @@ from os.path import exists
 
 LOGIN_FILE = "login.txt"
 PICKLE_OBJ_FILE = "seen_message_IDs.pkl"
-
+CSV_FILE = "transactions.csv"
 
 def connect_to_server():
 
@@ -42,3 +42,11 @@ def get_seen_message_ids ():
 def update_seen_message_ids (updated_dict):
     with open(PICKLE_OBJ_FILE,'wb') as file :
         pickle.dump(updated_dict,file)
+
+
+def setup_csv() :
+    if not exists(CSV_FILE) :
+        with open(CSV_FILE,'wb+') as file :
+            pass
+    return CSV_FILE
+    
