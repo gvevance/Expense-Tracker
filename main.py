@@ -13,6 +13,7 @@ from setup import update_seen_message_ids
 from tabulate import process_transaction
 from setup import setup_csv
 from tabulate import dump_from_csv_file
+from tabulate import dump_to_csv_file
 
 verbose = False
 
@@ -88,7 +89,9 @@ for i in range(num_of_messages,0,-1):
 #todo uncomment
 update_seen_message_ids(seen_messages_dict)
 
-for item in BUFFER :
-    print(item)
+if verbose :
+    for item in BUFFER :
+        print(item)
 
+dump_to_csv_file(BUFFER,CSV_FILE)
 dump_from_csv_file(CSV_FILE)

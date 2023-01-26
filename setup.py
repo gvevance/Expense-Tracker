@@ -46,7 +46,8 @@ def update_seen_message_ids (updated_dict):
 
 def setup_csv() :
     if not exists(CSV_FILE) :
-        with open(CSV_FILE,'wb+') as file :
-            pass
+        with open(CSV_FILE,'w+') as csvfile:
+            csvfile.write("Type,Date,Paid to,Amount,Message\n")
+
     return CSV_FILE
     
