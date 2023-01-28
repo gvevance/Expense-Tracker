@@ -69,13 +69,13 @@ if num_of_messages == 0 :
     print("PhonePe payments processed.")
 
 
-# seen_messages_dict = {}     #todo comment
+seen_messages_dict = {}     #todo comment
 #select INBOX for Sodexo
 status,messages = connection.select("\"Sodexo payments\"")
 num_of_messages = int(messages[0])
 print("\n# of Sodexo emails :",num_of_messages)
 
-# num_of_messages = 0     #todo comment
+num_of_messages = 0     #todo comment
 for i in range(num_of_messages,0,-1):
     res, msg, msg_ID = get_message_ID(connection,i)
     if msg_ID not in seen_messages_dict :

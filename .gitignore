@@ -1,3 +1,5 @@
 login.txt
 __pycache__/*
 seen_message_IDs.pkl
+.~lock.transactions.csv#
+transactions.csv

@@ -18,7 +18,7 @@ def dump_to_csv_file(BUFFER,CSV_FILE) :
         
         for item in BUFFER :
             type = item['type']
-            date = item['date']
+            date = item['date'].date()
             paid_to = item['paid_to']
             amount = item['amount']
             message = item['message']
